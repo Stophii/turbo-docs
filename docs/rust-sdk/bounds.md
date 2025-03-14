@@ -48,41 +48,53 @@ rect!(
 
 ## Complete Example
 
-Create 3 rows and columns of buttons that use `bounds` to recognize whenever they are hovered or clicked
+Create a row of 3 buttons that use `bounds` to recognize whenever they are hovered or clicked
 
 ```rust
 turbo::go! {
-    let viewport = bounds();
+    clear(0x000000ff);
 
-    let cols = viewport.columns_with_gap(3, 10);
-    let rows = viewport.rows_with_gap(3, 10);
-    // Divides the viewport into 3 columns and rows with 10 px gaps
-    for row in 0..3 {
-        for col in 0..3 {
-            let btn = Bounds::with_size(48, 14)
-                .anchor_center(&cols[col])
-                .anchor_top(&rows[row])
-                .translate_y(16);
-            rect!(
+    let viewport = Bounds::viewport();
 
-                color = if btn.pressed() {
-                    0x8800ffff
-                } else if btn.hovered() {
-                    0xaa00ffff
-                } else {
-                    0xff00ffff
-                },
-                xy = btn.xy(),
-                wh = btn.wh(),
-            );
+    let btn = viewport
+        .height(32)
+        .inset_left(8)
+        .inset_right(8)
+        .anchor_center(&viewport)
+        .inset_bottom(12)
+        .columns_with_gap(3, 12);
+    for (i, btn) in btn.into_iter().enumerate() {
+        let label = match i {
+            0 => "One",
+            1 => "Two",
+            2 => "Three",
+            _ => "",
+        };
+        let (regular_color, hover_color, pressed_color) = match i {
+            0 => (0x8833AAff, 0xAA55CCff, 0x800080FF),
+            1 => (0xCC3333ff, 0xFF5555ff, 0xFF0000FF),
+            2 => (0x33CCFFff, 0x66DDFFFF, 0x00FFFFFF),
+            _ => (0x3333CCff, 0x5555FFff, 0x000000ff),
+        };
+        rect!(
+            color = if btn.just_pressed() {
+                pressed_color
+            } else if btn.hovered() {
+                hover_color
+            } else {
+                regular_color
+            },
+            w = btn.w(),
+            h = btn.h(),
+            x = btn.x(),
+            y = btn.y(),
+            border_radius = 2,
+        );
 
-            let btn_inner = btn.inset(2);
-            text!("Click me!", xy = btn_inner.xy());
-            // Draw the text inside the button
-
-        }
+        let btn_inner = btn.inset_left(4).inset_top(4);
+        text!(label, x = btn_inner.x(), y = btn_inner.y(), font = "medium");    
     }
 }
 ```
 
-![Bounds example showing 3 by 3 button grid](/bound-example.gif)
+![Bounds example showing a simple button row](/bound-example.gif)
