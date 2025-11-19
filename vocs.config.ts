@@ -92,10 +92,7 @@ export default defineConfig({
             text: "Hello, World!",
             link: "/learn/tutorials/hello-world",
           },
-          {
-            text: "Character Sheet",
-            link: "/learn/tutorials/character-sheet",
-          },
+
           {
             text: "Pancake Cat",
             link: "/learn/tutorials/pancake-cat",
@@ -107,6 +104,10 @@ export default defineConfig({
           {
             text: "Space Shooter",
             link: "/learn/tutorials/space-shooter-part-1",
+          },
+          {
+            text: "Character Sheet",
+            link: "/learn/tutorials/character-sheet",
           },
           // {
           //   text: "Space Shooter (Part 2)",
