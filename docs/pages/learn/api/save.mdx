@@ -1,0 +1,142 @@
+# Save and Load
+
+## Overview
+
+You can save your game and load it automatically without targeting every individual variable!
+
+## API
+
+### `local::save()`
+
+Saves your game by converting data into a `borsch::vec`.
+
+```rust
+local::save(data: &[u8]) -> Result<i32, i32>
+```
+
+### `local::load()`
+
+Loads your game by reading the `borsch::vec` created by `local::save`.
+
+```rust
+local::load() Result<Vec<u8>, i32> 
+```
+
+## Usage
+
+:::tip[Making some helper function]
+Using `local::save` and `local::load` will work better in some helper functions inside the GameState `impl`.
+:::
+
+```rust
+pub fn save_local(&self) {
+    let data = borsh::to_vec(self);
+    if let Ok(d) = data {
+        let _ = local::save(&d);
+    } else {
+        log!("error saving");
+    }
+}
+```
+
+```rust
+pub fn load_local() -> GameState {
+    let data = local::load().unwrap_or_else(|_| vec![]);
+    match borsh::from_slice(&data) {
+        Ok(state) => return state,
+        Err(_) => {
+            log!("error loading game state");
+            return GameState::create();
+        }
+    }
+}
+```
+
+### Autosaving and Autoloading
+
+Any newly initialized file looks like this.
+
+```rust
+use turbo::*;
+
+#[turbo::game]
+struct GameState {
+    // Add fields here
+}
+impl GameState {
+    pub fn new() -> Self {
+        // initialize your game state
+        Self { }
+    }
+
+    pub fn update(&mut self) {
+        // This is where your main game loop code goes
+        // The stuff in this block will run ~60x per sec
+        text!("Hello, world!!!");
+    }
+}
+```
+
+let's add in a new function, `create` and then swap `new` and `create`
+
+:::tip[Why swap `new` and `create`?]
+By default when you load your game it's going to run `GameState::new()`, we want our `new()` to load data if we have it and we want `create()` to intialize all the values if data doesn't exist.
+:::
+
+```rust
+use turbo::*;
+
+#[turbo::game]
+struct GameState {
+    // Add fields here
+}
+impl GameState {
+
+    pub fn new() -> Self { 
+        // initialize your game state 
+        Self { } // [!code --] [!code focus] [!code hl]
+        GameState::load_local() // [!code ++] [!code focus] [!code hl]
+    }
+
+    pub fn create() -> Self { // [!code ++] [!code focus] [!code hl]
+        Self { // [!code ++] [!code focus] [!code hl]
+        } // [!code ++] [!code focus] [!code hl]
+    } // [!code ++] [!code focus] [!code hl]
+
+    pub fn update(&mut self) {
+        // This is where your main game loop code goes
+        // The stuff in this block will run ~60x per sec
+        text!("Hello, world!!!");
+    }
+}
+```
+
+### How to save?
+
+You can save your state by just calling the function whenever you need it.
+
+```rust
+self.save_local();
+```
+
+Use whatever works best for your type of game. Autosaving after specific events or periodically or a player going to a specific save menu are both solid options!
+
+### How to load?
+It happens automatically on load of your file, if a file is detected it will load, if not it'll create a new one using `GameState::create()`.
+
+If you wanted to delay the loading you could always call the load after a specific input. From inside the `update()` it would be done like this
+
+```rust
+*self = GameState::load_local();
+```
+Again use whatever method works best for your individual project!
+
+### How to delete?
+
+Take the gamestate and just overwrite it manually with create, this will initialize a new gamestate that is default.
+
+```rust
+*self = GameState::create();
+```
+
+put it behind a gamepad input or lose condition, like losing all of your lives, if applicable!
