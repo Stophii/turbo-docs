@@ -2,13 +2,13 @@
 
 ## Overview
 
-`Save` allows for in-game data to persist between session, this can extremely useful for web gaming session. `Load` will allow this data to be retrieved either automically or manually.
+`Save` allows for in-game data to persist between session, this can extremely useful for web gaming session. `Load` will allow this data to be retrieved either automatically or manually.
 
 ## API
 
 ### `local::save()`
 
-Saves your game by converting data into a `borsch::vec`.
+Saves your game by converting data into a `borsh::vec`.
 
 ```rust
 local::save(data: &[u8]) -> Result<i32, i32>
@@ -16,7 +16,7 @@ local::save(data: &[u8]) -> Result<i32, i32>
 
 ### `local::load()`
 
-Loads your game by reading the `borsch::vec` created by `local::save`.
+Loads your game by reading the `borsh::vec` created by `local::save`.
 
 ```rust
 local::load() Result<Vec<u8>, i32> 
@@ -97,7 +97,7 @@ impl GameState {
 
 ### Delete Saved Data
 
-Wipe the gamestate returning it back to its defaulted values.
+Wipe the `GameState` returning it back to its defaulted values.
 
 ```rust
 *self = GameState::create();
