@@ -1,0 +1,51 @@
+# Events
+
+## Overview
+
+`Events` will allow you to send an event from Turbo. This will allow the integration of API's or JS events from websites. 
+
+## API
+
+### `events::emit`
+
+This will send an event that you can read from your main.js after you export your game. 
+
+```rust
+events::emit(name: &str, data: &str)
+```
+
+## Usage
+
+### Calling Ads
+
+Then, after you export, you add code to your main.js file. you can put this code right above 
+
+```rust
+window.addEventListener("turboGameEvent", (e) => {
+    console.log(e.detail);
+
+    // Check for the name of the event, and perform the required action
+    if (e.detail && e.detail.name === "preroll_ad") {
+      //This will fire when your turbo event is called in the game
+      console.log("Detected Preroll Ad Event");
+      }
+    }
+   }
+
+await turbo.run(canvas, contents);
+```
+
+### Pausing and Resuming
+
+Pause your game with
+
+```rust
+window.turbo.pause();
+```
+
+Resume your game with 
+
+```rust
+window.turbo.resume();
+```
+

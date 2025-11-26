@@ -181,6 +181,7 @@ export default defineConfig({
           { text: "Randomness", link: "/learn/api/randomness" },
           { text: "Rectangles", link: "/learn/api/rectangles" },
           { text: "Save and Load", link: "/learn/api/save" },
+          { text: "Events", link: "/learn/api/events" },
           { text: "Sprites", link: "/learn/api/sprites" },
           { text: "Text", link: "/learn/api/text" },
           { text: "Text Boxes", link: "/learn/api/text_box" },
