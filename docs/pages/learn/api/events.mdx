@@ -8,7 +8,7 @@
 
 ### `events::emit`
 
-This will send an event that you can read from your main.js after you export your game. 
+This will send an event that you can read from your `main.js` after you export your game. 
 
 ```rust
 events::emit(name: &str, data: &str)
@@ -18,7 +18,7 @@ events::emit(name: &str, data: &str)
 
 ### Calling Ads
 
-Then, after you export, you add code to your main.js file. you can put this code right above 
+Then, after you export, you add code to your `main.js` file. You can put this code at the top.
 
 ```rust
 window.addEventListener("turboGameEvent", (e) => {
