@@ -2,13 +2,11 @@
 
 ## Overview
 
-`Save` allows for in-game data to persist between session, this can extremely useful for web gaming session. `Load` will allow this data to be retrieved either automatically or manually.
-
-## API
+Use `Save` and `Load` to store data from Turbo into local storage, and retrieve it the next time the same user plays the game. 
 
 ### `local::save()`
 
-Saves your game by converting data into a `borsh::vec`.
+Saves your game by converting data into a `borsh::vec`. Any data that is used in your Turbo game can be converted to `borsh`, you don't need to worry about matching a certain type.
 
 ```rust
 local::save(data: &[u8]) -> Result<i32, i32>
@@ -25,6 +23,8 @@ local::load() Result<Vec<u8>, i32>
 ## Usage
 
 ### Saving
+
+Add this function into your `Gamestate's` `impl` to save the entire `Gamestate`.
 
 ```rust
 pub fn save_local(&self) {
@@ -58,7 +58,7 @@ pub fn load_local() -> GameState {
 }
 ```
 
-Call this function whenever you require a load
+Call this function whenever you require a load to get the stored `GameState`
 
 ```rust
 *self = GameState::load_local();
