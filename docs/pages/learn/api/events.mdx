@@ -2,13 +2,12 @@
 
 ## Overview
 
-`Events` will allow you to send an event from Turbo. This will allow the integration of API's or JS events from websites. 
-
+Use `Events` to interface with the parent window for your game after you export to the web. This is most commonly used to start and stop ads, but can also be used for any interaction between your game and the website it is hosted on.
 ## API
 
 ### `events::emit`
 
-This will send an event that you can read from your `main.js` after you export your game. 
+This sends an event that you can read from your `main.js` after you export your game.
 
 ```rust
 events::emit(name: &str, data: &str)
@@ -16,36 +15,32 @@ events::emit(name: &str, data: &str)
 
 ## Usage
 
-### Calling Ads
+### Reading Events in Javascript
 
-Then, after you export, you add code to your `main.js` file. You can put this code at the top.
+After you export, you can read your event calls by using an `EventListener`. Add this code to your `main.js` file.
 
-```rust
+```js
 window.addEventListener("turboGameEvent", (e) => {
     console.log(e.detail);
 
     // Check for the name of the event, and perform the required action
-    if (e.detail && e.detail.name === "preroll_ad") {
-      //This will fire when your turbo event is called in the game
-      console.log("Detected Preroll Ad Event");
-      }
+    if (e.detail && e.detail.name === "your_event_name") {
+      //This will fire when your turbo event is called
+      console.log("Detected Turbo Event");
     }
-   }
+});
 
-await turbo.run(canvas, contents);
 ```
 
 ### Pausing and Resuming
 
-Pause your game with
+You can also fully pause your game from javascript, (e.g. while an ad is playing). You can do that using this code in your `main.js`:
 
-```rust
-window.turbo.pause();
+```js
+turbo.pause();
 ```
 
-Resume your game with 
-
-```rust
-window.turbo.resume();
+```js
+turbo.resume();
 ```
 
