@@ -6,7 +6,7 @@ Use `Save` and `Load` to store data from Turbo into local storage, and retrieve 
 
 ### `local::save()`
 
-Saves your game by converting data into a `borsh::vec`. Any data that is used in your Turbo game can be converted to `borsh`, you don't need to worry about matching a certain type.
+Saves your game to the browser's local storage by converting data into a `borsh::vec`. Any data that is used in your Turbo game can be converted to `borsh`, you don't need to worry about matching a certain type.
 
 ```rust
 local::save(data: &[u8]) -> Result<i32, i32>
@@ -17,17 +17,18 @@ local::save(data: &[u8]) -> Result<i32, i32>
 Loads your game by reading the `borsh::vec` created by `local::save`.
 
 ```rust
-local::load() Result<Vec<u8>, i32> 
+local::load() -> Result<Vec<u8>, i32> 
 ```
 
 ## Usage
 
 ### Saving
 
-Add this function into your `Gamestate's` `impl` to save the entire `Gamestate`.
+Add this function into your `Gamestate's` `impl` to save the entire `Gamestate`:
 
 ```rust
 pub fn save_local(&self) {
+    //serialize the GameState
     let data = borsh::to_vec(self);
     if let Ok(d) = data {
         let _ = local::save(&d);
@@ -37,7 +38,7 @@ pub fn save_local(&self) {
 }
 ```
 
-Call this function whenever you require a save.
+Call this function whenever you require a save:
 
 ```rust
 self.save_local();
@@ -52,13 +53,13 @@ pub fn load_local() -> GameState {
         Ok(state) => return state,
         Err(_) => {
             log!("error loading game state");
-            return GameState::create();
+            return GameState::new();
         }
     }
 }
 ```
 
-Call this function whenever you require a load to get the stored `GameState`
+Call this function whenever you require a load to get the stored `GameState`:
 
 ```rust
 *self = GameState::load_local();
@@ -97,7 +98,7 @@ impl GameState {
 
 ### Delete Saved Data
 
-Wipe the `GameState` returning it back to its defaulted values.
+Wipe the `GameState`, returning it back to its defaulted values.
 
 ```rust
 *self = GameState::create();
